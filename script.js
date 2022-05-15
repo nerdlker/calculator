@@ -9,11 +9,12 @@ const mainDisplay = document.querySelector("[data-current-operand]");
 let displayText = "";
 slaveDisplay.innerText = "";
 
-let previousNumber; // previous number
+let previousNumber = ""; // previous number
 let currentNumber; // current number
-let currentOperator;
+let currentOperator = "";
+let previousOperator = "";
 let result;
-let isFirst;
+let otherNumber;
 
 // ADDS EVENT LISTENERS TO ALL THE NUMBERED BUTTONS
 numberButtons.forEach((button) => {
@@ -28,7 +29,6 @@ allClearButton.addEventListener("click", () => {
   previousNumber = "";
   currentNumber = "0";
   currentOperator = "";
-  isFirst = true;
 });
 
 //
@@ -38,7 +38,6 @@ function setupUpDisplay(button) {
   displayText += button.target.innerText;
   mainDisplay.innerText = displayText;
   currentNumber = parseInt(displayText);
-  isFirst = true;
 }
 
 function updateDisplay() {
@@ -53,36 +52,46 @@ operationButtons.forEach((button) => {
 });
 
 function operate(button) {
-  //what happens when an operator is clicked
+  if (previousNumber === "") {
+    console.log("first condition");
+    //stores operator to current operator
+    currentOperator = button.target.innerText;
+    slaveDisplay.innerText = mainDisplay.innerText.toString() + " " + currentOperator;
+    previousNumber = parseInt(slaveDisplay.innerText); // stores previous num data
+    currentNumber = 0; //will help to reset current
+    previousOperator = currentOperator;
 
+    mainDisplay.innerText = "";
+    displayText = "";
+  } else {
+    console.log("second condition");
+    previousOperator = currentOperator;
+    currentOperator = button.target.innerText;
+    previousNumber = parseInt(compute(currentNumber, previousNumber, previousOperator));
+    slaveDisplay.innerText = previousNumber.toString() + " " + currentOperator;
+    currentNumber = "";
+    mainDisplay.innerText = "";
+    displayText = "";
+  }
   //when operate is clicked :
 
-  currentOperator = button.target.innerText; //stores operator to current operator
-  slaveDisplay.innerText =
-    mainDisplay.innerText.toString() + " " + button.target.innerText; // updates slave display
-  previousNumber = parseInt(slaveDisplay.innerText); // stores previous num data
-  currentNumber = 0; //will help to reset current
-  result = doMath(currentNumber, previousNumber, currentOperator);
-  mainDisplay.innerText = "";
-  displayText = "";
+  compute(currentNumber, previousNumber, currentOperator);
 }
 
 equalsButton.addEventListener("click", () => {
-  result = doMath(currentNumber, previousNumber, currentOperator);
+  result = compute(currentNumber, previousNumber, currentOperator);
   console.log(result);
   updateDisplay();
 });
 
-function doMath(fnum, snum, operator) {
-  console.log("i was clicked");
-
+function compute(fnum, snum, operator) {
   if (operator === "+") {
     return fnum + snum;
   } else if (operator === "-") {
     return snum - fnum;
   } else if (operator === "*") {
     return fnum * snum;
-  } else if ((operator === "÷" && fnum) || snum != 0) {
+  } else if (operator === "÷" && (fnum || snum != 0)) {
     return snum / fnum;
   }
 }
@@ -90,5 +99,5 @@ function doMath(fnum, snum, operator) {
 //todo
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------//
 //do check for double operator input.
-// hitting operator should evaulate if current numbers are present; HINT : try check if previousNumber is null
+//add backspace
 //---------------------------------//---------------------------------//---------------------------------//---------------------------------//
