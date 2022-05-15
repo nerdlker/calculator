@@ -15,6 +15,7 @@ let currentOperator = "";
 let previousOperator = "";
 let result;
 let otherNumber;
+let operatorSelected;
 
 // ADDS EVENT LISTENERS TO ALL THE NUMBERED BUTTONS
 numberButtons.forEach((button) => {
@@ -58,6 +59,8 @@ operationButtons.forEach((button) => {
 });
 
 function operate(button) {
+  if (previousNumber == "" && currentNumber == "0") return;
+
   if (previousNumber === "") {
     console.log("first condition");
     //stores operator to current operator
