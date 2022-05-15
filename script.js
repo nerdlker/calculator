@@ -31,6 +31,12 @@ allClearButton.addEventListener("click", () => {
   currentOperator = "";
 });
 
+//Event Listener for delete button
+deleteButton.addEventListener("click", () => {
+  displayText = mainDisplay.innerText.toString().slice(0, -1);
+  mainDisplay.innerText = displayText;
+});
+
 //
 function setupUpDisplay(button) {
   if (button.target.innerText === "." && displayText.includes(".")) return;
